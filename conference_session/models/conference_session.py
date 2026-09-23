@@ -61,4 +61,3 @@ class ConferenceSession(models.Model):
                 ['2026-09-22', '2026-09-23', '2026-09-24', '2026-09-25']
             )),
         ]
->>>>>>> 17.0-perf-issue
