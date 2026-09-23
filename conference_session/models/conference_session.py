@@ -29,12 +29,15 @@ class ConferenceSession(models.Model):
         for session in self:
             session.duration_in_hours = session.duration / 60.0
 
+    @api.depends('room')
     def _compute_room_session_count(self):
+        counts = dict(self._read_group(
+            [('room', 'in', self.mapped('room'))],
+            groupby=['room'],
+            aggregates=['__count'],
+        ))
         for session in self:
-            # deliberately slow: fires one SQL query per record
-            session.room_session_count = self.search_count(
-                [('room', '=', session.room)]
-            )
+            session.room_session_count = counts.get(session.room, 0)
 
     # ── populate (odoo-bin populate --size=medium --models=conference.session) ──
 
