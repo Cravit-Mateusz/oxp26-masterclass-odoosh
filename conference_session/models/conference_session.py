@@ -24,7 +24,7 @@ class ConferenceSession(models.Model):
         compute='_compute_room_session_count',
     )
 
-        @api.depends('duration')
+    @api.depends('duration')
     def _compute_duration_in_hours(self):
         for session in self:
             session.duration_in_hours = session.duration / 60.0
