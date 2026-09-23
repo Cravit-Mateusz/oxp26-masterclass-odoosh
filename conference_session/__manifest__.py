@@ -5,6 +5,7 @@
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',
+        'data/ir_config_parameter.xml',
         'views/conference_session_views.xml',
     ],
     'demo': [
