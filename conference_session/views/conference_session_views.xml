@@ -11,6 +11,7 @@
                 <field name="speaker"/>
                 <field name="duration"/>
                 <field name="room"/>
+                <field name="room_session_count"/>
             </tree>
         </field>
     </record>
