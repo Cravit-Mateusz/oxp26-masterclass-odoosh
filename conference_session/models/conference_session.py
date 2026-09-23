@@ -8,13 +8,8 @@ class ConferenceSession(models.Model):
     _order = 'date, name'
 
     name = fields.Char(string='Title', required=True)
-    speaker = fields.Char(string='Speaker')           # ← will be renamed 'presenter' in v19
-    duration = fields.Integer(string='Duration (min)')  # ← will become Float (hours) in v19
-    duration_in_hours = fields.Float(
-        string='Duration (h)',
-        compute='_compute_duration_in_hours',
-        store=True,
-    )
+    duration = fields.Float(string='Duration (hours)')
+    presenter = fields.Many2one('res.partner', string='Presenter')
     room = fields.Char(string='Room')
     notes = fields.Text(string='Notes')
     date = fields.Date(string='Date')
@@ -23,11 +18,6 @@ class ConferenceSession(models.Model):
         string='Sessions in room',
         compute='_compute_room_session_count',
     )
-
-    @api.depends('duration')
-    def _compute_duration_in_hours(self):
-        for session in self:
-            session.duration_in_hours = session.duration / 60.0
 
     @api.depends('room')
     def _compute_room_session_count(self):
@@ -53,10 +43,10 @@ class ConferenceSession(models.Model):
             ('name', populate.randomize(
                 [f'Session {i:05d}' for i in range(100_000)]
             )),
-            ('speaker', populate.randomize(
-                [f'Speaker {i:02d}' for i in range(1, 21)]
+            ('presenter', populate.randomize(
+                cls.env['res.partner'].search([]).ids or [False]
             )),
-            ('duration', populate.randomize([30, 45, 60, 75, 90, 105, 120])),
+            ('duration', populate.randomize([0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0])),
             ('room', populate.randomize(
                 ['Hall A', 'Hall B', 'Hall C', 'Hall D', 'Hall E']
             )),
